@@ -1,10 +1,18 @@
 const db = require('../data/dbConfig');
 
-function find() {
+function getRecipes() {
     return db('recipes');
 }
 
-function findById(id) {
+function getShoppingList(recipe_id) {
+    return db('recipes as r').join('recipe_ingredients as ri', 'r.id', 'ri.recipe_id').join('ingredients as i', 'ri.ingredient_id', 'i.id').select('i.id', 'i.name', 'ri.quantity').where({ recipe_id });
+}
+
+function getInstructions(recipe_id) {
+    return db('steps as s').join('recipes as r', 's.recipe_id', 'r.id').where({ recipe_id });
+}
+
+/* function findById(id) {
     return db('recipes').where({ id }).first();
 }
 
@@ -26,13 +34,10 @@ async function remove(id) {
     let scheme = await db('recipes').where({ id });
     await db('recipes').where({ id }).delete();
     return scheme;
-}
+} */
 
 module.exports = {
-    find,
-    findById,
-    findSteps,
-    add,
-    update,
-    remove
+    getRecipes,
+    getShoppingList,
+    getInstructions
 };
