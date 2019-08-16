@@ -12,7 +12,16 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id/steps', async (req, res) => {
+router.get('/:id', async (req, res) => {
+    try {
+        let recipe = await recipeModel.getRecipes(req.params.id);
+        res.status(200).json(recipe);
+    } catch (err) {
+        res.status(500).json({ error: 'The recipe information could not be retrieved.' });
+    }
+});
+
+router.get('/:id/instructions', async (req, res) => {
     try {
         let steps = await recipeModel.getInstructions(req.params.id);
         res.status(200).json(steps);
@@ -21,7 +30,7 @@ router.get('/:id/steps', async (req, res) => {
     }
 });
 
-router.get('/:id/ingredients', async (req, res) => {
+router.get('/:id/shoppingList', async (req, res) => {
     try {
         let ingredients = await recipeModel.getShoppingList(req.params.id);
         res.status(200).json(ingredients);
